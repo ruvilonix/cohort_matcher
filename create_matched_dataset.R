@@ -1,8 +1,6 @@
 library(dplyr)
 library(tidyr)
 
-COLUMNS_TO_MATCH <- c("sex", "bmi", "age", "D1_AT_wkld")
-
 # Specify non-duplicate columns
 non_duplicate_cols <- c("matched_pair", "sex", "phenotype", "race", "age", 
                         "height_in", "weight_lb", "bmi", "bas_score", 
@@ -26,7 +24,7 @@ df <- df %>%
                 ~ as.factor(.)))
 
 
-# Function to calculate differences between D2 and D1 for specified columns
+# Function to create a dataframe with differences between D2 and D1 for specified columns
 calculate_day_diffs <- function(df, diff_cols) {
   # Convert specified columns to numeric, coercing errors to NA, suppressing warnings
   df <- df %>%
@@ -65,7 +63,7 @@ calculate_day_diffs <- function(df, diff_cols) {
   # Step 3: Merge single day metrics with the diffs
   df_combined <- left_join(df_single, df_diffs, by = "ParticipantID")
   
-  return(df_combined)
+  return(diff_df)
 }
 
 
@@ -81,10 +79,4 @@ diff_df <- calculate_day_diffs(df, diff_cols)
 
 
 
-# Create dataframe only with columns for matching
-prop_data <- diff_df %>%
-  select(ParticipantID, phenotype, all_of(COLUMNS_TO_MATCH))
 
-
-# Display final data
-prop_data
