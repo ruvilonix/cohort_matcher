@@ -1,7 +1,7 @@
 library(dplyr)
 library(tidyr)
 
-PROPENSITY_COLUMNS <- c("sex", "bmi", "age", "wkld_D1_AT")
+MATCHING_COLUMNS <- c("sex", "bmi", "age", "wkld_D1_AT")
 
 # Define function to reshape participant data
 reshape_participant_data <- function(df, non_duplicate_cols = NULL) {
@@ -35,7 +35,7 @@ df_merged <- reshape_participant_data(df, non_duplicate_cols)
 # Select necessary columns for propensity score analysis (assuming PROPENSITY_COLUMNS is defined)
 # Replace 'PROPENSITY_COLUMNS' with actual column names
 prop_data <- df_merged %>%
-  select(ParticipantID, phenotype, all_of(PROPENSITY_COLUMNS))
+  select(ParticipantID, phenotype, all_of(MATCHING_COLUMNS))
 
 # Display final data
 prop_data
