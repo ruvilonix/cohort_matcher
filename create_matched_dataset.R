@@ -91,7 +91,7 @@ m.out3 <- matchit(phenotype ~ bmi + age + D1_AT_wkld,
                   data = diff_df,
                   method = "nearest", distance = "mahalanobis",
                   exact = ~ sex,
-                  caliper = c(bmi = 1, age = 1, D1_AT_wkld = .5))
+                  caliper = c(bmi = 1, age = 1, D1_AT_wkld = 0.5))
 
 # Display summary of matching
 summary(m.out3)
@@ -113,6 +113,9 @@ colnames(m.data)[colnames(m.data) == 'subclass'] <- 'new_matched_pair'
 
 # Final matched dataset
 full_matched <- m.data
+
+# Export full dataset CSV
+write.csv(full_matched, 'matched_dataset.csv', row.names = FALSE)
 
 
 #################################
