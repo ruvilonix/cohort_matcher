@@ -1,5 +1,6 @@
 library(dplyr)
 library(tidyr)
+library(MatchIt)
 
 
 ##################################
@@ -64,12 +65,10 @@ calculate_day_diffs <- function(df, diff_cols) {
     )
   
   # Step 3: Merge single day metrics with the diffs
-  df_combined <- left_join(df_single, df_diffs, by = "ParticipantID")
+  diff_df <- left_join(df_single, df_diffs, by = "ParticipantID")
   
   return(diff_df)
 }
-
-
 
 # Columns where we don't need to calculate difference between days
 non_diff_cols <- union(non_duplicate_cols, c("ParticipantID", "Study_Visit", "Time_Point"))
@@ -81,17 +80,10 @@ diff_cols <- setdiff(colnames(df), non_diff_cols)
 diff_df <- calculate_day_diffs(df, diff_cols)
 
 
-
 ################################
 ### Create matching pairs ######
 ################################
 
-# Choose variables on which to pair participants with similar values
-COLUMNS_TO_MATCH <- c("sex", "bmi", "age", "D1_AT_wkld")
-
-# Create dataframe only with columns for matching
-prop_data <- diff_df %>%
-  select(ParticipantID, phenotype, all_of(COLUMNS_TO_MATCH))
 
 # Find matches. Set caliper values to max SD that rows in matched pairs can differ. 
 m.out3 <- matchit(phenotype ~ bmi + age + D1_AT_wkld,
@@ -118,11 +110,8 @@ m.data <- subset(m.data, select = -weights)
 # Rename matched pair column
 colnames(m.data)[colnames(m.data) == 'subclass'] <- 'new_matched_pair'
 
-# Filter `diff_df` to include only rows where `ParticipantID` is in `m.data`
-full_matched <- diff_df[diff_df$ParticipantID %in% m.data$ParticipantID, ]
-
-# Add new_matched_pair column to final df to create final matched dataset
-full_matched <- merge(diff_df, m.data[c('ParticipantID', 'new_matched_pair')])
+# Final matched dataset
+full_matched <- m.data
 
 
 #################################
@@ -130,7 +119,7 @@ full_matched <- merge(diff_df, m.data[c('ParticipantID', 'new_matched_pair')])
 #################################
 
 
-only_diffs_df <- m.data %>% 
+only_diffs_df <- full_matched %>% 
   select(contains('diff'), 'ParticipantID', 'phenotype')
 
 check_distinct_values <- function(df, column_name) {
