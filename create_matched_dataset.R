@@ -159,4 +159,16 @@ for (col in setdiff(colnames(only_diffs_df), c('ParticipantID', 'phenotype'))) {
 results$p_adjusted <- p.adjust(results$p_value, method = "BH")
 
 # Sort by adjusted p-value
-results <- results[order(results$p_adjusted), ]
+results <- results[order(results$p_value, results$p_adjusted), ]
+
+
+###############################
+### Output results as image ###
+###############################
+
+results_table <- tableGrob(results,
+                           rows = NULL
+)
+h = grid::convertHeight(sum(results_table$heights), "in", TRUE)
+w = grid::convertWidth(sum(results_table$widths), "in", TRUE)
+ggplot2::ggsave("results.png", results_table, width=w, height=h)
