@@ -2,6 +2,7 @@ library(dplyr)
 library(tidyr)
 library(MatchIt)
 
+file_path <- "../cpet_clinical_data_v2.tsv"
 
 ##################################
 ##### Add difference columns #####
@@ -14,7 +15,7 @@ non_duplicate_cols <- c("matched_pair", "sex", "phenotype", "race", "age",
                         "q_hoursinbed", "test_site")
 
 # Read in the data
-df <- read.delim("../cpet_clinical_data_v2.tsv", sep = "\t")
+df <- read.delim(file_path, sep = "\t")
 
 # Exclude participants that didn't meet criteria for max, only for max time point
 ids_to_exclude <- c('PI-012', 'PI-043', 'PI-147', 'PI-008', 'PI-018', 'PI-029', 'PI-057', 'PI-082', 'PI-091', 'PI-128')
