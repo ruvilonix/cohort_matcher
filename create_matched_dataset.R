@@ -1,6 +1,8 @@
 library(dplyr)
 library(tidyr)
 library(MatchIt)
+library(grid)
+library(gridExtra)
 
 file_path <- "../cpet_clinical_data_v2.tsv"
 
