@@ -7,7 +7,7 @@ library(MatchIt)
 ##### Add difference columns #####
 ##################################
 
-# Specify non-duplicate columns
+# Specify columns that are the same between days
 non_duplicate_cols <- c("matched_pair", "sex", "phenotype", "race", "age", 
                         "height_in", "weight_lb", "bmi", "bas_score", 
                         "q_education", "q_reclined", "q_sleeprefreshing", 
